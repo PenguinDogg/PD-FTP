@@ -4,4 +4,6 @@ import com.example.pdftp.data.FTPConnection;
 
 public interface FTPControllerApi {
     FTPConnection FTP_CLIENT = new FTPConnection();
+
+    void put(String text);
 }
