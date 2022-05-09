@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.pdftp.FTPController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+   <GridPane>
+     <columnConstraints>
+       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+     </columnConstraints>
+     <rowConstraints>
+       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+     </rowConstraints>
+      <children>
+         <Label text="Host">
+            <GridPane.margin>
+               <Insets />
+            </GridPane.margin></Label>
+         <TextField fx:id="host" text="ftp.dlptest.com" GridPane.columnIndex="1" />
+         <Label text="Port" GridPane.rowIndex="1">
+            <GridPane.margin>
+               <Insets />
+            </GridPane.margin></Label>
+         <TextField fx:id="port" layoutX="110.0" layoutY="13.0" text="21" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         <Label text="Username" GridPane.columnIndex="2">
+            <GridPane.margin>
+               <Insets left="10.0" />
+            </GridPane.margin></Label>
+         <TextField fx:id="username" text="dlpuser" GridPane.columnIndex="3" />
+         <Label text="Password" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <GridPane.margin>
+               <Insets left="10.0" />
+            </GridPane.margin></Label>
+         <PasswordField fx:id="password" text="rNrKYTX9g7z3RgJRmxWuGHbeu" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+      </children>
+      <VBox.margin>
+         <Insets />
+      </VBox.margin>
+   </GridPane>
+   <Label fx:id="debugText" />
+    <Button onAction="#onConnectButtonClick" text="Connect" />
+</VBox>
