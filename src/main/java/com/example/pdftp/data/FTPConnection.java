@@ -30,7 +30,7 @@ public class FTPConnection extends FTP {
         ftp = new FTPClient();
         ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
 
-        ftp.connect(ftpUrl, this.port);
+        ftp.connect(this.host, this.port);
         int reply = ftp.getReplyCode();
         if(!FTPReply.isPositiveCompletion(reply)){
             ftp.disconnect();
