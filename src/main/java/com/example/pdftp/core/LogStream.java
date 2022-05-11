@@ -8,9 +8,14 @@ import java.io.OutputStream;
 
 public class LogStream extends OutputStream {
 
-    public static FTPController FTP_CONTROLLER;
+    public FTPController ftp;
+
+    public LogStream(FTPController ftp){
+        this.ftp = ftp;
+    }
+
     @Override
     public void write(int b) throws IOException {
-        FTP_CONTROLLER.put(String.valueOf((char) b));
+        ftp.put((char) b);
     }
 }

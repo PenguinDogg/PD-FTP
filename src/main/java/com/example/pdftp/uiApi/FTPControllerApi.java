@@ -6,4 +6,5 @@ public interface FTPControllerApi {
     FTPConnection FTP_CLIENT = new FTPConnection();
 
     void put(String text);
+    void put(char c);
 }
