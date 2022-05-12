@@ -3,6 +3,7 @@ package com.example.pdftp.data;
 import com.example.pdftp.core.LogStream;
 import com.example.pdftp.dataApi.FTP;
 import com.example.pdftp.ui.FTPController;
+import javafx.scene.control.TextArea;
 import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -24,25 +25,21 @@ public class FTPConnection extends FTP {
     }
 
     @Override
-    public void connect(String host, String port, String user, String password, FTPController ui) throws IOException {
+    public void connect(String host, String port, String user, String password, FTPController ui, TextArea log) throws IOException {
         this.host = host;
         this.port = Integer.parseInt(port);
         this.user = user;
         this.password = password;
 
         ftp = new FTPClient();
-
-        ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(new LogStream(ui))));
-        ftp.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
+        ftp.addProtocolCommandListener(new PrintCommandListener(new PrintStream(new LogStream(log))));
         ftp.connect(this.host, this.port);
         int reply = ftp.getReplyCode();
         if (!FTPReply.isPositiveCompletion(reply)) {
             ftp.disconnect();
             throw new IOException("Exception in connecting to FTP Server");
         }
-        ui.put("Attempting to log in with user credentials\n");
         ftp.login(user, password);
-        ui.put("Successfully logged in!\n");
 
         listFiles("/", ui);
     }
@@ -57,7 +54,8 @@ public class FTPConnection extends FTP {
         }
 
         for(FTPFile file : directories){
-            ui.addDirectoryToTree(file);
+            if(path != "/"){ ui.addDirectoryToTree(file, path); }
+            else { ui.addDirectoryToTree(file); }
         }
 
         ui.setFilesAscending();

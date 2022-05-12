@@ -1,21 +1,21 @@
 package com.example.pdftp.core;
 
-
-import com.example.pdftp.ui.FTPController;
-
+import javafx.scene.control.TextArea;
 import java.io.IOException;
 import java.io.OutputStream;
 
 public class LogStream extends OutputStream {
 
-    public FTPController ftp;
+    private TextArea textArea;
 
-    public LogStream(FTPController ftp){
-        this.ftp = ftp;
+    public LogStream(TextArea textArea){
+        this.textArea = textArea;
     }
 
     @Override
     public void write(int b) throws IOException {
-        ftp.put((char) b);
+        textArea.appendText(String.valueOf((char)b));
+        textArea.positionCaret(textArea.getLength());
     }
+
 }

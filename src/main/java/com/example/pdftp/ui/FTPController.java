@@ -2,6 +2,7 @@ package com.example.pdftp.ui;
 
 import com.example.pdftp.core.DirUI;
 import com.example.pdftp.core.FileUI;
+import com.example.pdftp.core.LogStream;
 import com.example.pdftp.uiApi.FTPControllerApi;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -9,7 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import org.apache.commons.net.ftp.FTPFile;
-
 import java.io.IOException;
 
 public class FTPController implements FTPControllerApi {
@@ -22,7 +22,8 @@ public class FTPController implements FTPControllerApi {
     @FXML
     TextArea logger;
 
-    TreeItem rootRemoteTree, rootRemoteTreeDir;
+    TreeItem<FileUI> rootRemoteTree;
+    TreeItem<DirUI> rootRemoteTreeDir;
     TreeTableColumn<FileUI, String> fileColumn;
     @FXML
     TreeTableView remoteTree;
@@ -31,29 +32,50 @@ public class FTPController implements FTPControllerApi {
     TreeTableView remoteTreeDir;
 
     FTPController uiInstance;
-    @Override
-    public void put(String text) {
-        logger.appendText(text);
-    }
 
-    public void put(char c){
-        logger.appendText(String.valueOf(c));
+    LogStream log;
+
+    private TreeItem itemInTree(TreeItem search){
+        for(TreeItem item : rootRemoteTreeDir.getChildren()){
+            DirUI itemDirUI = (DirUI) item.getValue();
+            DirUI searchDirUI = (DirUI) search.getValue();
+            if(itemDirUI.getPath().equals(searchDirUI.getPath())){ return item; }
+        }
+        return null;
     }
 
     public void addDirectoryToTree(FTPFile file){
         if(remoteTreeDir.getRoot() == null){ initRemoteTreeDir(); }
+        addDirectoryToTree(file, "/");
+    }
 
-        FTPFile newFile = file;
+    /*TODO: Bug: Adds duplicate directories if not root, doesn't nest further
+    TODO: than 2*/
+
+    public void addDirectoryToTree(FTPFile file, String path){
+        if(!rootRemoteTreeDir.isExpanded()){ rootRemoteTreeDir.setExpanded(true); }
         file.setName("/" + file.getName());
-        rootRemoteTree.getChildren().add(new TreeItem(new FileUI(newFile)));
-        rootRemoteTreeDir.getChildren().add(new TreeItem(new DirUI(newFile.getName())));
+        addFileToTree(file);
+        TreeItem<DirUI> item = new TreeItem<>(new DirUI(file.getName()));
+        if(itemInTree(item) == null){
+            TreeItem<DirUI> pathItem = itemInTree(new TreeItem<>(new DirUI(path)));
+            if(pathItem != null) {
+                pathItem.getChildren().add(item);
+            } else {
+                rootRemoteTreeDir.getChildren().add(item);
+                item.setExpanded(true);
+            }
+        }
     }
 
     public void addFileToTree(FTPFile file){
         if(remoteTree.getRoot() == null){ initRemoteTree(); }
-
-        rootRemoteTree.getChildren().add(new TreeItem(new FileUI(file)));
+        addFileToTree(file, rootRemoteTree);
         if(!rootRemoteTree.isExpanded()) rootRemoteTree.setExpanded(true);
+    }
+
+    private void addFileToTree(FTPFile file, TreeItem atItem){
+        atItem.getChildren().add(new TreeItem(new FileUI(file)));
     }
 
     public void clearTreeFiles(String newName){
@@ -137,12 +159,11 @@ public class FTPController implements FTPControllerApi {
 
     @FXML
     protected void onConnectButtonClick() {
-        put("Attempting connection with host, please wait...\n");
         try {
             FTP_CLIENT.connect(host.getText(), port.getText(),
-                    username.getText(), password.getText(), this);
+                    username.getText(), password.getText(), this, logger);
         } catch (IOException e){
-            put("Error: " + e.toString());
+
         }
     }
 }

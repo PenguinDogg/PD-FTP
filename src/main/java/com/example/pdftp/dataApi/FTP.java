@@ -1,5 +1,8 @@
 package com.example.pdftp.dataApi;
+import com.example.pdftp.core.LogStream;
 import com.example.pdftp.ui.FTPController;
+import javafx.beans.property.StringProperty;
+import javafx.scene.control.TextArea;
 import org.apache.commons.net.ftp.FTPClient;
 
 import java.io.IOException;
@@ -18,5 +21,5 @@ public abstract class FTP {
 
     public abstract void close() throws IOException;
 
-    public abstract void connect(String host, String port, String user, String password, FTPController ui) throws IOException;
+    public abstract void connect(String host, String port, String user, String password, FTPController ui, TextArea log) throws IOException;
 }
