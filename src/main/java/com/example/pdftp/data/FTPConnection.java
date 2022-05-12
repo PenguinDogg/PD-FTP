@@ -9,9 +9,7 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class FTPConnection extends FTP {
 
@@ -51,11 +49,17 @@ public class FTPConnection extends FTP {
 
     public void listFiles(String path, FTPController ui) throws IOException {
         FTPFile[] files = ftp.listFiles(path);
-        ui.setRoot(path);
+        Queue<FTPFile> directories = new LinkedList<FTPFile>();
+        ui.setRootRemoteTree(path);
         for (FTPFile file : files) {
-            // Loop over each file
-            ui.addFileToTree(file);
+            if(file.isDirectory()){ directories.add(file); }
+            else { ui.addFileToTree(file); }
         }
+
+        for(FTPFile file : directories){
+            ui.addDirectoryToTree(file);
+        }
+
         ui.setFilesAscending();
     }
 }

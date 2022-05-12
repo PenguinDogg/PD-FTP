@@ -50,6 +50,11 @@
       <VBox.margin>
          <Insets bottom="10.0" />
       </VBox.margin></TextArea>
+   <TreeTableView fx:id="remoteTreeDir" layoutX="20.0" layoutY="206.0" prefHeight="200.0" prefWidth="200.0">
+      <VBox.margin>
+         <Insets bottom="10.0" />
+      </VBox.margin>
+   </TreeTableView>
    <TreeTableView fx:id="remoteTree" prefHeight="200.0" prefWidth="200.0" />
     <Button onAction="#onConnectButtonClick" text="Connect">
       <VBox.margin>

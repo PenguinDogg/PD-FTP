@@ -15,6 +15,16 @@ public class FileUI {
     private String permissions;
     private String owner;
 
+    public boolean isDirectory() {
+        return isDirectory;
+    }
+
+    public void setDirectory(boolean directory) {
+        isDirectory = directory;
+    }
+
+    private boolean isDirectory;
+
     public String getFilesize() {
         return String.valueOf(filesize);
     }
@@ -139,6 +149,7 @@ public class FileUI {
         this.lastModified = formatCalender(file.getTimestamp());
         this.permissions = formatPermissions(file);
         this.owner = formatOwner(file);
+        this.isDirectory = file.isDirectory();
     }
 
     public FileUI(String directory){
@@ -148,6 +159,7 @@ public class FileUI {
         this.lastModified = "";
         this.permissions = "";
         this.owner = "";
+        this.isDirectory = true;
     }
 
 
